@@ -1,0 +1,26 @@
+# Requirements for Google Models Attractor Research
+# Python 3.8+
+
+# Core ML/DL
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.24.0
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.11.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+networkx>=3.1
+
+# Utilities
+tqdm>=4.65.0
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+
+# Optional: For better performance
+# sentencepiece>=0.1.99  # For tokenization
+# bitsandbytes>=0.41.0   # For 8-bit quantization
