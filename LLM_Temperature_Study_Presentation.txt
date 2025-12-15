@@ -1,0 +1,145 @@
+
+Title: Symbolic Dynamics of LLM Temperature Sampling
+================================================================================
+SLIDE 1: PROJECT IDEA
+================================================================================
+
+
+Objective:
+Investigate how the "temperature" hyperparameter in large language models
+controls the randomness and structure of generated token sequences, using
+the classic logistic map as a theoretical baseline.
+
+Core Question:
+Does LLM temperature behave like the logistic map's r-parameter, producing
+a period-doubling route to chaos as temperature increases?
+
+Approach:
+1. Establish a ground-truth baseline using the logistic map (r ∈ [3.4, 4.0]).
+2. Encode trajectories into a three-symbol alphabet (A/B/D bands) to enable
+   direct comparison between deterministic chaos and stochastic LLM outputs.
+3. Sweep temperature T ∈ [0.1, 2.0] across multiple LLM families and compute
+   four key metrics: period, entropy rate, spectral gap, and symbol frequencies.
+4. Compare LLM symbolic dynamics against the logistic baseline to quantify
+   similarities and differences.
+
+Why It Matters:
+Understanding temperature's effect on token-level dynamics can inform prompt
+engineering, sampling strategy selection, and theoretical models of LLM
+creativity vs. coherence trade-offs.
+
+Suggested Visual: Logistic map bifurcation diagram or period-cascade plot.
+
+================================================================================
+SLIDE 2: MODELS USED
+================================================================================
+
+Title: Model Families Under Study
+
+Logistic Map Baseline:
+- Classic one-dimensional discrete dynamical system: x_{t+1} = r·x_t·(1 − x_t)
+- Parameter sweep: r from 3.4 to 4.0 (150 points, 20 seeds each)
+- Symbolic encoding: A (attractor band 0.48–0.52), B (above), D (below)
+
+LLM Implementations:
+
+1. Google Gemma 2B (2.61 billion parameters)
+   - HuggingFace model ID: google/gemma-2-2b
+   - Temperature sweep: 20 points in [0.1, 2.0]
+   - 10 prompts per temperature, 200 tokens each
+   - Token-to-symbol mapping via modulo normalization
+
+2. Alibaba Qwen 1.5B (1.8 billion parameters)
+   - HuggingFace model ID: Qwen/Qwen1.5-1.8B
+   - Same temperature sweep and prompt protocol as Gemma
+   - Enables cross-vendor comparison
+
+3. OpenAI GPT-2 Series (planned)
+   - GPT-2 124M → GPT-2-XL 1.5B
+   - Reserved for future integration
+
+Metrics Computed for All Models:
+- Minimal symbolic period (up to k = 16; ∞ = chaotic)
+- Markov transition matrix and stationary distribution
+- Entropy rate (bits per symbol)
+- Spectral gap (mixing rate indicator)
+- Symbol frequencies (freq_A, freq_B, freq_D)
+
+Suggested Visual: Table or icon grid showing model names, sizes, and status.
+
+================================================================================
+SLIDE 3: KEY FINDINGS
+================================================================================
+
+Title: Key Findings
+
+1. Predominantly Chaotic LLM Outputs
+   - Gemma: 90.5% of sequences are aperiodic (period = ∞) — 181 out of 200
+   - Logistic map: 63.4% chaotic (1903 out of 3000) at comparable parameter range
+   - LLMs lack the clear period-doubling cascade seen in deterministic chaos.
+   - Gemma finite periods: mostly period-1 (18 sequences), rare period-4 (1 sequence)
+
+2. Entropy Increases with Temperature
+   - Gemma entropy at low T (≤ 0.5): ~0.50 bits/token
+   - Gemma entropy at high T (≥ 1.5): ~1.01 bits/token
+   - Overall Gemma mean entropy: 0.788 bits/token (std: 0.357, range: 0.000–1.431)
+   - Logistic mean entropy: 0.488 bits/symbol (std: 0.292, range: 0.000–1.205)
+   - Confirms temperature effectively controls output randomness.
+
+3. Fast Mixing / Short Memory
+   - Gemma mean spectral gap: 0.846 (std: 0.123, range: 0.372–1.000)
+   - Logistic mean spectral gap: 0.457 (std: 0.298, range: 0.000–0.979)
+   - High spectral gap → tokens have weaker sequential dependencies.
+   - Gemma mixes ~85% faster than logistic baseline.
+
+4. Symbol Distribution Imbalance
+   - Gemma: A = 1.9%, B = 32.4%, D = 65.7%
+   - Logistic: A = 7.0%, B = 59.7%, D = 33.3%
+   - Gemma heavily biased toward D (below-band) symbols.
+   - Imbalance is an artifact of modulo-based token encoding; future work
+     should explore embedding-based or semantic mappings.
+
+5. Temperature as Control Parameter
+   - At low T (≤ 0.5): 76% chaotic, some periodicity emerges (~24% finite period)
+   - At high T (≥ 1.5): 100% of sequences are chaotic
+   - Spectral gap remains stable across temperatures (~0.87)
+   - Temperature acts analogously to the logistic r, but with different dynamics.
+
+Suggested Visual: Side-by-side bar charts or metric comparison table.
+
+================================================================================
+SLIDE 4: MAIN RESULTS
+================================================================================
+
+Title: Main Results & Conclusions
+
+Quantitative Summary Table:
+
+| Metric              | Gemma 2B   | Logistic Map | Delta       |
+|---------------------|------------|--------------|-------------|
+| Chaotic fraction    | 90.5%      | 63.4%        | +27.1 pp    |
+| Mean entropy rate   | 0.788 bits | 0.488 bits   | +0.300 bits |
+| Mean spectral gap   | 0.846      | 0.457        | +0.389      |
+| Symbol A frequency  | 1.9%       | 7.0%         | −5.1 pp     |
+| Symbol B frequency  | 32.4%      | 59.7%        | −27.3 pp    |
+| Symbol D frequency  | 65.7%      | 33.3%        | +32.4 pp    |
+
+Conclusions:
+- LLM token streams are fundamentally stochastic, not deterministic chaotic.
+- Temperature modulates randomness but does not replicate the logistic cascade.
+- Spectral analysis reveals LLMs mix faster, implying shorter "memory" horizons.
+- Symbol encoding method significantly affects frequency balance; improved
+  mappings (e.g., embedding clusters) are needed for fair comparison.
+- Gemma shows higher baseline chaos even at low temperatures compared to logistic map.
+
+Future Work:
+- Integrate GPT-2 series for three-vendor comparison.
+- Explore semantic or embedding-based symbol encodings.
+- Investigate prompt sensitivity and its effect on symbolic dynamics.
+- Study temperature-dependent periodicity windows in more detail.
+
+Suggested Visual: Summary table + concluding bullet points or infographic.
+
+================================================================================
+END OF PRESENTATION TEXT
+================================================================================
